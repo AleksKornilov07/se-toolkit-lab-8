@@ -3,8 +3,16 @@
 - [1. Required steps](#1-required-steps)
   - [1.1. Clean up the previous lab (on your VM)](#11-clean-up-the-previous-lab-on-your-vm)
   - [1.2. Set up your fork](#12-set-up-your-fork)
+    - [1.2.1. Fork the course instructors' repo](#121-fork-the-course-instructors-repo)
+    - [1.2.2. Go to your fork](#122-go-to-your-fork)
+    - [1.2.3. Enable issues](#123-enable-issues)
+    - [1.2.4. Add a classmate as a collaborator](#124-add-a-classmate-as-a-collaborator)
+    - [1.2.5. Protect your `main` branch](#125-protect-your-main-branch)
   - [1.3. Clone your fork and set up the environment (on your laptop)](#13-clone-your-fork-and-set-up-the-environment-on-your-laptop)
   - [1.4. Deploy to your VM](#14-deploy-to-your-vm)
+    - [1.4.1. Connect to your VM and clone the repo](#141-connect-to-your-vm-and-clone-the-repo)
+    - [1.4.2. Prepare the environment (on the VM)](#142-prepare-the-environment-on-the-vm)
+    - [1.4.3. Start the services (on the VM)](#143-start-the-services-on-the-vm)
   - [1.5. Populate the database](#15-populate-the-database)
   - [1.6. Verify the deployment](#16-verify-the-deployment)
   - [1.7. Coding agent](#17-coding-agent)
@@ -244,6 +252,7 @@ The database starts empty. You need to run the ETL pipeline to populate it with 
 
 > [!IMPORTANT]
 > If the dashboard shows no data or errors, make sure:
+>
 > - The ETL sync completed successfully (step 1.5)
 > - You entered the correct API key in the frontend
 > - Try selecting a different lab in the dropdown (e.g., `lab-04`)
