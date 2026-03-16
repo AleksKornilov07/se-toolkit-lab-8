@@ -468,7 +468,9 @@ Complete these steps:
 > [!NOTE]
 > Replace [`<user>`](./operating-system.md#user-placeholder) with the actual [username](./operating-system.md#username).
 >
-> Add the [`SSH` public key](./ssh.md#ssh-public-key) for [the `Autochecker` agent](./autochecker.md#the-autochecker-agent) so that it can connect to your VM and perform checks.
+> Add the [`SSH` public key](./ssh.md#ssh-public-key) for [the `Autochecker` agent](./autochecker.md#the-autochecker-agent) so that it can connect to your VM as the user `<user>`
+> to have access to files owned by you.
+
 
 1. To check whether the public `SSH` key is already present,
 
