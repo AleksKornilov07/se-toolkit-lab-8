@@ -2,6 +2,21 @@ version = 1
 revision = 3
 requires-python = "==3.14.2"
 
+[manifest]
+members = [
+    "lms-backend",
+]
+
+[manifest.dependency-groups]
+dev = [
+    { name = "poethepoet", specifier = ">=0.40.0" },
+    { name = "pyright", specifier = "==1.1.408" },
+    { name = "pytest", specifier = "==9.0.2" },
+    { name = "pytest-asyncio", specifier = ">=0.25.0" },
+    { name = "ruff", specifier = "==0.14.14" },
+    { name = "ty", specifier = "==0.0.13" },
+]
+
 [[package]]
 name = "aiosqlite"
 version = "0.22.1"
@@ -207,9 +222,9 @@ wheels = [
 ]
 
 [[package]]
-name = "learning-management-service"
+name = "lms-backend"
 version = "0.1.0"
-source = { virtual = "." }
+source = { virtual = "backend" }
 dependencies = [
     { name = "asyncpg" },
     { name = "fastapi" },
@@ -224,12 +239,6 @@ dependencies = [
 dev = [
     { name = "aiosqlite" },
     { name = "greenlet" },
-    { name = "poethepoet" },
-    { name = "pyright" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-    { name = "ty" },
 ]
 
 [package.metadata]
@@ -247,12 +256,6 @@ requires-dist = [
 dev = [
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "greenlet", specifier = ">=3.2.0" },
-    { name = "poethepoet", specifier = ">=0.40.0" },
-    { name = "pyright", specifier = "==1.1.408" },
-    { name = "pytest", specifier = "==9.0.2" },
-    { name = "pytest-asyncio", specifier = ">=0.25.0" },
-    { name = "ruff", specifier = "==0.14.14" },
-    { name = "ty", specifier = "==0.0.13" },
 ]
 
 [[package]]
