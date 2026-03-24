@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "shutdown-reminder",
+      "name": "Daily shutdown reminder",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "atMs": null,
+        "everyMs": null,
+        "expr": "0 18 * * *",
+        "tz": "Europe/Moscow"
+      },
+      "payload": {
+        "kind": "agent_turn",
+        "message": "Remind the user to stop the Docker containers with `docker compose down` if they are done with the lab for today.",
+        "deliver": true,
+        "channel": "webchat",
+        "to": "default"
+      },
+      "state": {
+        "nextRunAtMs": null,
+        "lastRunAtMs": null,
+        "lastStatus": null,
+        "lastError": null
+      },
+      "createdAtMs": 0,
+      "updatedAtMs": 0,
+      "deleteAfterRun": false
+    }
+  ]
+}
