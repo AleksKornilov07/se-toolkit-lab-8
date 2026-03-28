@@ -225,3 +225,104 @@ async def main(base_url: str | None = None) -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+# ============================================================================
+# Observability Tools (VictoriaLogs & VictoriaTraces)
+# ============================================================================
+
+_logs_url = os.environ.get("VICTORIALOGS_URL", "http://victorialogs:9428").rstrip("/")
+_traces_url = os.environ.get("VICTORIATRACES_URL", "http://victoriatraces:10428").rstrip("/")
+
+class _LogsSearchQuery(BaseModel):
+    query: str = Field(description="LogsQL query, e.g. 'error', 'level:error'")
+    limit: int = Field(default=20, ge=1, le=100, description="Max entries to return")
+
+class _TimeRangeQuery(BaseModel):
+    service: str = Field(description="Service name, e.g. 'backend'")
+    hours: int = Field(default=1, ge=1, le=24, description="Time range in hours")
+
+class _TraceQuery(BaseModel):
+    service: str = Field(description="Service name to search traces for")
+    limit: int = Field(default=5, ge=1, le=20, description="Max traces to return")
+
+class _TraceById(BaseModel):
+    trace_id: str = Field(description="Trace ID to fetch")
+
+async def _logs_search(args: _LogsSearchQuery) -> list[TextContent]:
+    """Search VictoriaLogs using LogsQL."""
+    import httpx
+    url = f"{_logs_url}/select/logsql/query"
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url, params={"query": args.query, "limit": args.limit}, timeout=30.0)
+            resp.raise_for_status()
+            return _text(resp.json())
+    except Exception as e:
+        return _text({"error": str(e)})
+
+async def _logs_error_count(args: _TimeRangeQuery) -> list[TextContent]:
+    """Count error logs for a service."""
+    import httpx
+    query = f'_stream:{{service="{args.service}"}} AND level:error'
+    url = f"{_logs_url}/select/logsql/query"
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url, params={"query": query, "limit": 100}, timeout=30.0)
+            resp.raise_for_status()
+            return _text(resp.json())
+    except Exception as e:
+        return _text({"error": str(e)})
+
+async def _traces_list(args: _TraceQuery) -> list[TextContent]:
+    """List recent traces for a service."""
+    import httpx
+    url = f"{_traces_url}/jaeger/api/traces"
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url, params={"service": args.service, "limit": args.limit}, timeout=30.0)
+            resp.raise_for_status()
+            return _text(resp.json())
+    except Exception as e:
+        return _text({"error": str(e)})
+
+async def _traces_get(args: _TraceById) -> list[TextContent]:
+    """Fetch a specific trace by ID."""
+    import httpx
+    url = f"{_traces_url}/jaeger/api/traces/{args.trace_id}"
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url, timeout=30.0)
+            resp.raise_for_status()
+            return _text(resp.json())
+    except Exception as e:
+        return _text({"error": str(e)})
+
+# Register observability tools
+_register(
+    "logs_search",
+    "Search VictoriaLogs using LogsQL query. Returns matching log entries.",
+    _LogsSearchQuery,
+    _logs_search,
+)
+_register(
+    "logs_error_count",
+    "Count error logs for a service. Use to check if there are errors.",
+    _TimeRangeQuery,
+    _logs_error_count,
+)
+_register(
+    "traces_list",
+    "List recent traces for a service. Returns trace summaries.",
+    _TraceQuery,
+    _traces_list,
+)
+_register(
+    "traces_get",
+    "Fetch full details of a specific trace by ID.",
+    _TraceById,
+    _traces_get,
+)
+
+if __name__ == "__main__":
+    asyncio.run(main())
