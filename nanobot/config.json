@@ -1,0 +1,48 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "./workspace",
+      "model": "coder-model",
+      "provider": "openai",
+      "maxTokens": 8192,
+      "contextWindowTokens": 65536,
+      "temperature": 0.1,
+      "maxToolIterations": 40,
+      "systemPrompt": "You are an LMS assistant with access to MCP tools.\n\nAvailable tools:\n- lms_labs: List all labs (use when user asks about available labs)\n- lms_health: Check LMS health\n- lms_pass_rates: Get pass rates for a specific lab\n- lms_completion_rate: Get completion rate for a lab\n- lms_top_learners: Get top learners for a lab\n- lms_groups: Get group performance for a lab\n- lms_timeline: Get submission timeline for a lab\n\nWhen user asks about labs, use lms_labs tool.\nWhen user asks about pass rates, completion, or other analytics, use the appropriate tool with the lab name.\nIf user doesn't specify which lab, ask them to choose from available labs."
+    }
+  },
+  "providers": {
+    "openai": {
+      "apiKey": "key",
+      "apiBase": "http://localhost:42005/v1"
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "provider": "brave",
+        "maxResults": 5
+      }
+    },
+    "exec": {
+      "enable": true,
+      "timeout": 60
+    },
+    "restrictToWorkspace": false,
+    "mcpServers": {
+      "lms": {
+        "command": "uv",
+        "args": [
+          "run",
+          "python",
+          "-m",
+          "mcp_lms"
+        ],
+        "env": {
+          "NANOBOT_LMS_BACKEND_URL": "http://localhost:42002",
+          "NANOBOT_LMS_API_KEY": "my-secret-api-key"
+        }
+      }
+    }
+  }
+}
